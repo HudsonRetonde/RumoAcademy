@@ -84,6 +84,12 @@ O que é o GitHub?
 	O GitHub é a famosa “rede social dos programadores”, uma comunidade forte na qual os programadores do mundo inteiro interagem uns com os outros compartilhando código e contribuindo uns com os outros que pode ser acessada de qualquer lugar com disponibilidade de internet.  
 	
 	É uma plataforma online na qual são criados os repositórios remotos e que depositamos nossos argivos por intermédio do Git.  
+		
+		
+**** Comandos utilizados por mim para subir os arquivos para o GitHub:		
+* 		Não originei o repositório diretamente no meu computador como o habitual, primeiro criei o repositório diretamente no GitHub, 
+		clonei para a minha máquina com o git clone, fiz o git status para verificar se estava tudo certo, git add ., git commit e por fim o git push.
+		
 		*/
 	}
 }
@@ -92,7 +98,7 @@ O que é o GitHub?
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 2791; 
+ * @POSICAO-CURSOR = 2805; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
