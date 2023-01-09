@@ -31,21 +31,31 @@ namespace CalculadoraDeConsumo
 
         private void RecebeCombustívelEDistancia()
         {
-            
-            Console.WriteLine("Quantos litros de combistível havia no seu tanque? ");
-            //Recebe a informação e transforma para double
-            QtdDeCombustivel = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-            Console.WriteLine("");
+            try
+            {
+                Console.WriteLine("Quantos litros de combistível havia no seu tanque? ");
+                //Recebe a informação e transforma para double
+                QtdDeCombustivel = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                Console.WriteLine("");
 
-            Console.WriteLine("Qual foi a distância percorrida em quilômetros? ");
-            //Recebe a informação e transforma para double
-            DistanciaPercorrida = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-            Console.WriteLine("");
-            Console.WriteLine("");
+                Console.WriteLine("Qual foi a distância percorrida em quilômetros? ");
+                //Recebe a informação e transforma para double
+                DistanciaPercorrida = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                Console.WriteLine("");
+                Console.WriteLine("");
 
-            //Formula que efetua o consumo do veículo
-            Consumo = DistanciaPercorrida / QtdDeCombustivel;            
+                //Formula que efetua o consumo do veículo
+                Consumo = DistanciaPercorrida / QtdDeCombustivel;            
             
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números, não letras! ");
+                Console.WriteLine("");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+               
+            }
         }
 
         private void Relatorio()
