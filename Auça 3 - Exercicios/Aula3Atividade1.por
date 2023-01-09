@@ -2,6 +2,7 @@ programa
 {
 	inclua biblioteca Tipos
 	inclua biblioteca Matematica
+	inclua biblioteca Texto
 	funcao inicio()
 	{		
 
@@ -28,13 +29,14 @@ programa
 		//Também não encontrei a função que "varresse" o array para tirar uma possível vírgula e colocasse um ponto no lugar de um número float.
 		//Todavia, consegui fazer a validação conforme a aula de hoje.
 		escreva("\nAgora digite o valor do seu salário fixo em R$ : ")
-		cadeia salarioFixoString		
+		cadeia salarioFixoString				
 		leia(salarioFixoString)
-			se(ValidarFormatarValores(salarioFixoString) < 0)
+		cadeia salarioFixoStringComOuSemVirgula = Texto.substituir(salarioFixoString, ",", ".")
+			se(ValidarFormatarValores(salarioFixoStringComOuSemVirgula) < 0)
 			{
 				retorne
 			}
-		real salarioFixo = ValidarFormatarValores(salarioFixoString)
+		real salarioFixo = ValidarFormatarValores(salarioFixoStringComOuSemVirgula)
 			
 
 		escreva("\nPor fim, informe o total de vendas em R$ acumuladas no mês : ")
@@ -83,7 +85,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 1709; 
+ * @POSICAO-CURSOR = 2343; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
