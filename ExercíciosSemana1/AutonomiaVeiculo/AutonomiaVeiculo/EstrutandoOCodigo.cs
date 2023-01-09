@@ -15,9 +15,27 @@ namespace AutonomiaVeiculo
         private double Autonomia { get; set; }
         public void Executar()
         {
-            Cabecalho();
-            RecebeCombustívelEDistanciaEAutonomia();
-            Relatorio();
+            try
+            {
+                Cabecalho();
+                RecebeCombustívelEDistanciaEAutonomia();
+                Relatorio();
+
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números, não letras! ");
+                Console.WriteLine("");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
+
+            catch (DivideByZeroException)
+            {
+                Console.WriteLine("Divisão por zero não é possiível!");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
         }
 
         private void Cabecalho()
