@@ -16,10 +16,35 @@ namespace LucroDoProduto
         private double Lucrototal { get; set; }
         public void Executar()
         {
-            Cabecalho();
-            QtdDeProdutosAnalisar();
-            CriaMatriz();
-            CalculaLucroLucroTotal();
+            try
+            {
+                Cabecalho();
+                QtdDeProdutosAnalisar();
+                CriaMatriz();
+                CalculaLucroLucroTotal();
+
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números na descrição para os campos colunas, não letras! ");
+                Console.WriteLine("");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
+
+            catch (DivideByZeroException)
+            {
+                Console.WriteLine("Divisão por zero não é possiível!");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
+
+            catch (OverflowException)
+            {
+                Console.WriteLine("Escolha um número maior que zero para definir quantos produtos deseja verificar!");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
         }
 
         private void Cabecalho()
@@ -70,6 +95,12 @@ namespace LucroDoProduto
                     Console.WriteLine($"Digite os números do {l +1}° produto coluna {c +1}: ");
                     QtdPcPvProduto = double.Parse(Console.ReadLine());
                     MatrizQuantidadePCompraPVenda[l, c] = QtdPcPvProduto;
+
+                    if (QtdPcPvProduto < 0)
+                    {
+                        Console.WriteLine("É preciso que a quantidade seja um número maior que zero.");
+                        Console.WriteLine("Finalize e reinicie o programa para retornar.");
+                    }
                     
                 }
 }
