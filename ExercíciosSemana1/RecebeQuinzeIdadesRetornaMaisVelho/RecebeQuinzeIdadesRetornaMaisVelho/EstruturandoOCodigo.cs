@@ -15,11 +15,31 @@ namespace RecebeDezIdadesRetornaMaisVelho
         private int[] Idades { get; set;}
         public void Executar()
         {
-            Cabecalho();
-            CapturandoDados();
-            Instrucoes();
-            LeituraEProgramacaoDosDados();
-            Relatorio();
+            try
+            {
+                Cabecalho();
+                CapturandoDados();
+                Instrucoes();
+                LeituraEProgramacaoDosDados();
+                Relatorio();
+
+            }
+
+            catch (FormatException)
+            {
+                Console.WriteLine("Para realizar a comparação é necessário a inserção de números quando for digitar a idade e não letras!");
+                Console.WriteLine("");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
+
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Para realizar a comparação é necessário a inserção de números quando for digitar a idade e não letras!");
+                Console.WriteLine("");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
         }
 
         private void Cabecalho()

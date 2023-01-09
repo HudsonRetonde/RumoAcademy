@@ -16,11 +16,30 @@ namespace DestrinchandoDadosDoVendedor
         private double SalarioBruto { get; set; }
         public void Executar()
         {
-            Cabecalho();
-            RecebeInformacoesDoVendedor();
-            CalculaComissao();
-            CalculaSalarioBruto();
-            Relatorio();
+            try
+            {
+                Cabecalho();
+                RecebeInformacoesDoVendedor();
+                CalculaComissao();
+                CalculaSalarioBruto();
+                Relatorio();
+
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números, não letras! ");
+                Console.WriteLine("");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
+
+            catch (DivideByZeroException)
+            {
+                Console.WriteLine("Divisão por zero não é possiível!");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
+
         }
         private void Cabecalho()
         {
@@ -35,14 +54,28 @@ namespace DestrinchandoDadosDoVendedor
             Console.WriteLine("Qual o nome do(a) vendedor(a): ");
             NomeVendedor = Console.ReadLine();
             Console.WriteLine("");
-
+                       
             Console.WriteLine("Por gentileza, informe o salário fixo do vendedor(a) em R$: ");
             SalarioFixo = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
             Console.WriteLine("");
 
+            if (SalarioFixo < 0)
+            {
+                Console.WriteLine("Por gentileza, insira um número positivo para que o programa efetue de forma correta o cálculo.");
+                Console.WriteLine("Reinicie o programa e faça novamente.");
+                Console.WriteLine("");
+            }
+
             Console.WriteLine("Por fim, informe o total de vendas em R$ acumuladas no mês :");
             VendasAcumuladasMes = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
             Console.WriteLine("");
+
+            if (VendasAcumuladasMes < 0)
+            {
+                Console.WriteLine("Por gentileza, insira um número positivo para que o programa efetue de forma correta o cálculo.");
+                Console.WriteLine("Reinicie o programa e faça novamente.");
+                Console.WriteLine("");
+            }
 
         }
 

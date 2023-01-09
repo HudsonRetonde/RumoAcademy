@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace LucroDoProduto
             }
             catch (FormatException)
             {
-                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números na descrição para os campos colunas, não letras! ");
+                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números e não letras! ");
                 Console.WriteLine("");
                 Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
                 Console.WriteLine("");

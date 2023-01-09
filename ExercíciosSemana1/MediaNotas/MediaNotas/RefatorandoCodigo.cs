@@ -15,9 +15,27 @@ namespace MediaNotas
         private double Media { get; set; }
         public void Executar()
         {
-            Cabecalho();
-            RecebeInformacoes();
-            Relatorio();
+            try
+            {
+                Cabecalho();
+                RecebeInformacoes();
+                Relatorio();
+
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números e não letras! ");
+                Console.WriteLine("");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
+
+            catch (OverflowException)
+            {
+                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números e não letras!");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
         }
 
         private void Cabecalho()
@@ -45,6 +63,14 @@ namespace MediaNotas
             {
                 Console.WriteLine($"Escreva a {notas + 1} ° nota: ");
                 vetNotas[notas] = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+
+                if (vetNotas[notas] < 0)
+                {
+                    Console.WriteLine("Insira um valor que não seja negativo para a devida execução do programa.");
+                    Console.WriteLine("");
+                    Console.WriteLine("Reinicie para executar da forma correta.");
+                    Console.WriteLine("");
+                }
 
                 Soma += vetNotas[notas];
             }

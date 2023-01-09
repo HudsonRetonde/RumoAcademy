@@ -15,27 +15,12 @@ namespace AutonomiaVeiculo
         private double Autonomia { get; set; }
         public void Executar()
         {
-            try
-            {
-                Cabecalho();
-                RecebeCombustívelEDistanciaEAutonomia();
-                Relatorio();
+            
+            Cabecalho();
+            RecebeCombustívelEDistanciaEAutonomia();
+            Relatorio();
 
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números, não letras! ");
-                Console.WriteLine("");
-                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
-                Console.WriteLine("");
-            }
-
-            catch (DivideByZeroException)
-            {
-                Console.WriteLine("Divisão por zero não é possiível!");
-                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
-                Console.WriteLine("");
-            }
+            
         }
 
         private void Cabecalho()
@@ -53,11 +38,25 @@ namespace AutonomiaVeiculo
             QtdDeCombustivel = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
             Console.WriteLine("");
 
+            if (QtdDeCombustivel <= 0)
+            {
+                Console.WriteLine("Por gentileza, insira um número positivo para fazer o cálculo.");
+                Console.WriteLine("");
+                Console.WriteLine("Reinicie o programa.");
+            }
+
             Console.WriteLine("Qual foi a distância percorrida em quilômetros? ");
             //Recebe a informação e transforma para double
             DistanciaPercorrida = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
             Console.WriteLine("");
             Console.WriteLine("");
+
+            if (DistanciaPercorrida <= 0)
+            {
+                Console.WriteLine("Por gentileza, insira um número positivo para fazer o cálculo.");
+                Console.WriteLine("");
+                Console.WriteLine("Reinicie o programa.");
+            }
 
             //Formula que efetua o consumo por km do veículo
             Consumo = DistanciaPercorrida / QtdDeCombustivel;

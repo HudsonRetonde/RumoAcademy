@@ -13,9 +13,27 @@ namespace RecebeQuinzeNumerosExibePositivos
         private int[] Vetor { get; set; }
         public void Executar()
         {
-            Cabecalho();
-            RecebeNumeros();
-            EscrevePositivos();
+            try
+            {
+                Cabecalho();
+                RecebeNumeros();
+                EscrevePositivos();
+
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Para realizar o cálculo é necessário a inserção de números e não letras! ");
+                Console.WriteLine("");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
+
+            catch (OverflowException)
+            {
+                Console.WriteLine("Escolha um número maior que zero para definir quantos produtos deseja verificar!");
+                Console.WriteLine("******* Por gentileza, reinicie o programa. *******");
+                Console.WriteLine("");
+            }
         }
         private void Cabecalho()
         {
@@ -33,7 +51,7 @@ namespace RecebeQuinzeNumerosExibePositivos
 
             Vetor = new int[QtdNumers];
 
-            while (Cont < 4)
+            while (Cont < 10)
             {
                 Console.WriteLine($"Por gentileza, digite 0 {Cont + 1}° número: ");
                 int numero;
