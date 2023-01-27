@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CategoriaNadador", "CategoriaNadador.csproj", "{A90FFC58-A253-4F65-894D-F666DDED3965}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A90FFC58-A253-4F65-894D-F666DDED3965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A90FFC58-A253-4F65-894D-F666DDED3965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A90FFC58-A253-4F65-894D-F666DDED3965}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A90FFC58-A253-4F65-894D-F666DDED3965}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F688C4E3-DD9B-4F6A-B110-A9C8C236AC91}
+	EndGlobalSection
+EndGlobal
