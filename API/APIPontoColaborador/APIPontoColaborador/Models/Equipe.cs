@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIPontoColaborador.Models
 {
+    [Table("Equipes")]
     public class Equipe
     {
         [Key]
