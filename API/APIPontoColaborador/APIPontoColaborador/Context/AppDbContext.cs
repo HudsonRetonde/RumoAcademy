@@ -8,10 +8,12 @@ namespace APIPontoColaborador.Context
         public AppDbContext(DbContextOptions<AppDbContext> options) : base (options)
         {}
 
-        public DbSet<Cargos> Cargos { get; set; }
-        public DbSet<Equipes> Equipes { get; set; }
-        public DbSet<Funcionarios> Funcionarios { get; set; }
-        public DbSet<Liderancas> Lidencas { get; set; }
-        public DbSet<Ponto> Ponto { get; set; }
+        public DbSet<Cargo>? Cargos { get; set; }
+        public DbSet<Funcionario>? Funcionarios { get; set; }
+        public DbSet<Ponto>? Pontos { get; set; }
+        public DbSet<Lideranca>? Liderancas { get; set; }
+        public DbSet<Equipe>? Equipes { get; set; }
+
     }
+    
 }
