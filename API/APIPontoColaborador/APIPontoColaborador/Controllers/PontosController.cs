@@ -27,7 +27,7 @@ namespace APIPontoColaborador.Controllers
             return pontos;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name= "ObterPonto")]
         public ActionResult<Ponto> Get(int id) 
         {
             var ponto = _context.Pontos.FirstOrDefault(p => p.PontoId== id);
@@ -36,6 +36,19 @@ namespace APIPontoColaborador.Controllers
                 return NotFound("Este id não existe, por favor digite um id válido.");
             }
             return ponto;
+        }
+
+        [HttpPost]
+        public ActionResult Post(Ponto ponto)
+        {
+            if (ponto is null)            
+                return BadRequest();
+            
+            _context.Pontos.Add(ponto);
+            _context.SaveChanges();
+
+            return new CreatedAtRouteResult("ObterPonto", 
+                new { id = ponto.PontoId }, ponto);
         }
     }
 }
