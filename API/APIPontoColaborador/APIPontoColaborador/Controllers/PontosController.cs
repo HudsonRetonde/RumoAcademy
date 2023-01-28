@@ -26,5 +26,16 @@ namespace APIPontoColaborador.Controllers
             }
             return pontos;
         }
+
+        [HttpGet("{id:int}")]
+        public ActionResult<Ponto> Get(int id) 
+        {
+            var ponto = _context.Pontos.FirstOrDefault(p => p.PontoId== id);
+            if (ponto is null) 
+            {
+                return NotFound("Este id não existe, por favor digite um id válido.");
+            }
+            return ponto;
+        }
     }
 }
