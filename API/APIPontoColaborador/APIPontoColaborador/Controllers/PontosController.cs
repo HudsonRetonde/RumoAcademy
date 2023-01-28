@@ -65,5 +65,21 @@ namespace APIPontoColaborador.Controllers
 
             return Ok(ponto);
         }
+
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            var ponto = _context.Pontos.FirstOrDefault(p => p.PontoId== id);
+
+            if (ponto is null)
+            {
+                return NotFound("Ponto não localizado, por gentileza, digite um Id válido.");
+            }
+
+            _context.Pontos.Remove(ponto);
+            _context.SaveChanges();
+
+            return Ok(ponto);   
+        }
     }
 }
