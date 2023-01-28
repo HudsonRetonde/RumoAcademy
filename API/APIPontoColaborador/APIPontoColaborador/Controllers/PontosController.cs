@@ -2,6 +2,7 @@
 using APIPontoColaborador.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIPontoColaborador.Controllers
 {
@@ -49,6 +50,20 @@ namespace APIPontoColaborador.Controllers
 
             return new CreatedAtRouteResult("ObterPonto", 
                 new { id = ponto.PontoId }, ponto);
+        }
+
+        [HttpPut("{id:int}")]
+        public ActionResult Put(int id, Ponto ponto)
+        {
+            if (id != ponto.PontoId)
+            {
+                return BadRequest("Por gentileza, digite um Id existente...");
+            }
+
+            _context.Entry(ponto).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return Ok(ponto);
         }
     }
 }
