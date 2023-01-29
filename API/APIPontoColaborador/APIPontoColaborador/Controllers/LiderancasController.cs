@@ -19,35 +19,59 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("FuncionariosLiderancas")]
         public ActionResult<IEnumerable<Lideranca>> GetPontosFuncionarios()
         {
-            return _context.Liderancas.Include(p => p.Funcionarios).Where(l => l.LiderancaId <= 10).AsNoTracking().ToList();
+            try
+            {
+                return _context.Liderancas.Include(p => p.Funcionarios).Where(l => l.LiderancaId <= 10).AsNoTracking().ToList();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
         [HttpGet]
         public ActionResult<IEnumerable<Lideranca>> Get()
         {
-            var liderancas = _context.Liderancas.AsNoTracking().ToList();
-            if (liderancas is null)
+            try
             {
-                return NotFound("Lideranca não encontrada.");
+                var liderancas = _context.Liderancas.AsNoTracking().ToList();
+                if (liderancas is null)
+                {
+                    return NotFound("Lideranca não encontrada.");
+                }
+                return liderancas;
+
             }
-            return liderancas;
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet("{id:int}", Name = "ObterLideranca")]
         public ActionResult<Lideranca> Get(int id)
         {
-            var lideranca = _context.Liderancas.AsNoTracking().FirstOrDefault(p => p.LiderancaId == id);
-            if (lideranca is null)
+            try
             {
-                return NotFound("Este id não existe, por favor digite um id válido.");
+                var lideranca = _context.Liderancas.AsNoTracking().FirstOrDefault(p => p.LiderancaId == id);
+                if (lideranca is null)
+                {
+                    return NotFound("Este id não existe, por favor digite um id válido.");
+                }
+                return lideranca;
             }
-            return lideranca;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpPost]
         public ActionResult Post(Lideranca lideranca)
         {
             if (lideranca is null)
-                return BadRequest();
+                return BadRequest("Liderança não encontrada.");
 
             _context.Liderancas.Add(lideranca);
             _context.SaveChanges();
@@ -61,7 +85,7 @@ namespace APIPontoColaborador.Controllers
         {
             if (id != lideranca.LiderancaId)
             {
-                return BadRequest("Por gentileza, digite um Id existente...");
+                return BadRequest($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Entry(lideranca).State = EntityState.Modified;
@@ -77,7 +101,7 @@ namespace APIPontoColaborador.Controllers
 
             if (lideranca is null)
             {
-                return NotFound("Liderança não localizada, por gentileza, digite um Id válido.");
+                return NotFound($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Liderancas.Remove(lideranca);

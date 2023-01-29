@@ -20,25 +20,39 @@ namespace APIPontoColaborador.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Cargo>> Get()
         {
-            return _context.Cargos.AsNoTracking().ToList();
+            try
+            {
+                return _context.Cargos.AsNoTracking().ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet("{id:int}", Name = "ObterCargo")]
         public ActionResult<Cargo> Get(int id)
         {
-            var cargo = _context.Cargos.AsNoTracking().FirstOrDefault(p => p.CargoId == id);
-            if (cargo is null)
+            try
             {
-                return NotFound("Este id não existe, por favor digite um id válido.");
+                var cargo = _context.Cargos.AsNoTracking().FirstOrDefault(p => p.CargoId == id);
+                if (cargo is null)
+                {
+                    return NotFound($" O Id {id} não existe, digite um Id válido...");
+                }
+                return Ok(cargo);
             }
-            return Ok(cargo);
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpPost]
         public ActionResult Post(Cargo cargo)
         {
             if (cargo is null)
-                return BadRequest();
+                return BadRequest("Cargo não encontrado.");
 
             _context.Cargos.Add(cargo);
             _context.SaveChanges();
@@ -52,7 +66,7 @@ namespace APIPontoColaborador.Controllers
         {
             if (id != cargo.CargoId)
             {
-                return BadRequest("Por gentileza, digite um Id existente...");
+                return BadRequest($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Entry(cargo).State = EntityState.Modified;
@@ -68,7 +82,7 @@ namespace APIPontoColaborador.Controllers
 
             if (cargo is null)
             {
-                return NotFound("Cargo não localizado, por gentileza, digite um Id válido.");
+                return NotFound($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Cargos.Remove(cargo);

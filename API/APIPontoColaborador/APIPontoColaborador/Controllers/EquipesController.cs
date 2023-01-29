@@ -19,42 +19,72 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("FuncionariosEquipes")]
         public ActionResult<IEnumerable<Equipe>> GetEquipesFuncionarios()
         {
-            return _context.Equipes.Include(p => p.Funcionarios).Where(e => e.EquipeId <= 10).AsNoTracking().ToList();
+            try
+            {
+                return _context.Equipes.Include(p => p.Funcionarios).Where(e => e.EquipeId <= 10).AsNoTracking().ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet("LiderancasEquipes")]
         public ActionResult<IEnumerable<Equipe>> GetEquipesLiderancas()
         {
-            return _context.Equipes.Include(p => p.Liderancas).Where(e => e.EquipeId <= 10).AsNoTracking().ToList();
+            try
+            {
+                return _context.Equipes.Include(p => p.Liderancas).Where(e => e.EquipeId <= 10).AsNoTracking().ToList();
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Equipe>> Get()
         {
-            var equipes = _context.Equipes.AsNoTracking().ToList();
-            if (equipes is null)
+            try
             {
-                return NotFound("Equipe não encontrada.");
+                var equipes = _context.Equipes.AsNoTracking().ToList();
+                if (equipes is null)
+                {
+                    return NotFound("Equipe não encontrada.");
+                }
+                return equipes;
+
             }
-            return equipes;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet("{id:int}", Name = "ObterEquipe")]
         public ActionResult<Equipe> Get(int id)
         {
-            var equipe = _context.Equipes.AsNoTracking().FirstOrDefault(p => p.EquipeId == id);
-            if (equipe is null)
+            try
             {
-                return NotFound("Este id não existe, por favor digite um id válido.");
+                var equipe = _context.Equipes.AsNoTracking().FirstOrDefault(p => p.EquipeId == id);
+                if (equipe is null)
+                {
+                    return NotFound($" O Id {id} não existe, digite um Id válido...");
+                }
+                return equipe;
             }
-            return equipe;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpPost]
         public ActionResult Post(Equipe equipe)
         {
             if (equipe is null)
-                return BadRequest();
+                return BadRequest("Equipe não encontrada...");
 
             _context.Equipes.Add(equipe);
             _context.SaveChanges();
@@ -68,7 +98,7 @@ namespace APIPontoColaborador.Controllers
         {
             if (id != equipe.EquipeId)
             {
-                return BadRequest("Por gentileza, digite um Id existente...");
+                return BadRequest($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Entry(equipe).State = EntityState.Modified;
@@ -84,7 +114,7 @@ namespace APIPontoColaborador.Controllers
 
             if (equipe is null)
             {
-                return NotFound("Equipe não localizada, por gentileza, digite um Id válido.");
+                return NotFound($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Equipes.Remove(equipe);

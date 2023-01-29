@@ -20,36 +20,58 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("FuncionariosPontos")]
         public ActionResult<IEnumerable<Ponto>> GetPontosFuncionarios()
         {
-            return _context.Pontos.Include(p => p.Funcionarios).Where(pto => pto.PontoId <= 10).AsNoTracking().ToList();
+            try
+            {
+                return _context.Pontos.Include(p => p.Funcionarios).Where(pto => pto.PontoId <= 10).AsNoTracking().ToList();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Ponto>> Get() 
         {
-            var pontos = _context.Pontos.AsNoTracking().ToList();
-            if (pontos is null)
+            try
             {
-                return NotFound("Ponto não encontrado.");
+                var pontos = _context.Pontos.AsNoTracking().ToList();
+                if (pontos is null)
+                {
+                    return NotFound("Ponto não encontrado.");
+                }
+                return pontos;
+
             }
-            return pontos;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet("{id:int}", Name= "ObterPonto")]
         public ActionResult<Ponto> Get(int id) 
         {
-            var ponto = _context.Pontos.AsNoTracking().FirstOrDefault(p => p.PontoId== id);
-            if (ponto is null) 
+            try
             {
-                return NotFound("Este id não existe, por favor digite um id válido.");
+                var ponto = _context.Pontos.AsNoTracking().FirstOrDefault(p => p.PontoId== id);
+                if (ponto is null) 
+                {
+                    return NotFound($" O Id {id} não existe, digite um Id válido...");
+                }
+                return ponto;
             }
-            return ponto;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpPost]
         public ActionResult Post(Ponto ponto)
         {
             if (ponto is null)            
-                return BadRequest();
+                return BadRequest("Ponto não encontrado");
             
             _context.Pontos.Add(ponto);
             _context.SaveChanges();
@@ -63,7 +85,7 @@ namespace APIPontoColaborador.Controllers
         {
             if (id != ponto.PontoId)
             {
-                return BadRequest("Por gentileza, digite um Id existente...");
+                return BadRequest($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Entry(ponto).State = EntityState.Modified;
@@ -79,7 +101,7 @@ namespace APIPontoColaborador.Controllers
 
             if (ponto is null)
             {
-                return NotFound("Ponto não localizado, por gentileza, digite um Id válido.");
+                return NotFound($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Pontos.Remove(ponto);

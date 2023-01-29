@@ -19,36 +19,61 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("Cargos")]
         public ActionResult<IEnumerable<Funcionario>> GetFuncionariosCargos()
         {
-            return _context.Funcionarios.Include(p => p.Cargos).Where(f => f.FuncionarioId <= 10).AsNoTracking().ToList();
+            try
+            {
+                return _context.Funcionarios.Include(p => p.Cargos).Where(f => f.FuncionarioId <= 10).AsNoTracking().ToList();
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Funcionario>> Get()
         {
-            var funcionarios = _context.Funcionarios.AsNoTracking().ToList();
-            if (funcionarios is null)
+            try
             {
-                return NotFound("Funcionario não encontrado.");
+                var funcionarios = _context.Funcionarios.AsNoTracking().ToList();
+                if (funcionarios is null)
+                {
+                    return NotFound($"Funcionario não encontrado.");
+                }
+                return funcionarios;
+
             }
-            return funcionarios;
+            catch (Exception)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpGet("{id:int}", Name = "ObterFuncionario")]
         public ActionResult<Funcionario> Get(int id)
         {
-            var funcionario = _context.Funcionarios.FirstOrDefault(p => p.FuncionarioId == id);
-            if (funcionario is null)
+            try
             {
-                return NotFound("Este id não existe, por favor digite um id válido.");
+                var funcionario = _context.Funcionarios.FirstOrDefault(p => p.FuncionarioId == id);
+                if (funcionario is null)
+                {
+                    return NotFound("Este id não existe, por favor digite um id válido.");
+                }
+                return funcionario;
+
             }
-            return funcionario;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um erro ao tratar a sua solicitação.");
+            }
         }
 
         [HttpPost]
         public ActionResult Post(Funcionario funcionario)
         {
             if (funcionario is null)
-                return BadRequest();
+                return BadRequest("Funcionário não encontrado");
 
             _context.Funcionarios.Add(funcionario);
             _context.SaveChanges();
@@ -62,7 +87,7 @@ namespace APIPontoColaborador.Controllers
         {
             if (id != funcionario.FuncionarioId)
             {
-                return BadRequest("Por gentileza, digite um Id existente...");
+                return BadRequest($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Entry(funcionario).State = EntityState.Modified;
@@ -78,7 +103,7 @@ namespace APIPontoColaborador.Controllers
 
             if (funcionario is null)
             {
-                return NotFound("Funcionario não localizado, por gentileza, digite um Id válido.");
+                return NotFound($" O Id {id} não existe, digite um Id válido...");
             }
 
             _context.Funcionarios.Remove(funcionario);
