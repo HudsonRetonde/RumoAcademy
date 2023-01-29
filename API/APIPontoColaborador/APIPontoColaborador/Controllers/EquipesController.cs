@@ -17,15 +17,21 @@ namespace APIPontoColaborador.Controllers
         }
 
         [HttpGet("FuncionariosEquipes")]
-        public ActionResult<IEnumerable<Equipe>> GetPontosFuncionarios()
+        public ActionResult<IEnumerable<Equipe>> GetEquipesFuncionarios()
         {
-            return _context.Equipes.Include(p => p.Funcionarios).ToList();
+            return _context.Equipes.Include(p => p.Funcionarios).Where(e => e.EquipeId <= 10).AsNoTracking().ToList();
+        }
+
+        [HttpGet("LiderancasEquipes")]
+        public ActionResult<IEnumerable<Equipe>> GetEquipesLiderancas()
+        {
+            return _context.Equipes.Include(p => p.Liderancas).Where(e => e.EquipeId <= 10).AsNoTracking().ToList();
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Equipe>> Get()
         {
-            var equipes = _context.Equipes.ToList();
+            var equipes = _context.Equipes.AsNoTracking().ToList();
             if (equipes is null)
             {
                 return NotFound("Equipe não encontrada.");
@@ -36,7 +42,7 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("{id:int}", Name = "ObterEquipe")]
         public ActionResult<Equipe> Get(int id)
         {
-            var equipe = _context.Equipes.FirstOrDefault(p => p.EquipeId == id);
+            var equipe = _context.Equipes.AsNoTracking().FirstOrDefault(p => p.EquipeId == id);
             if (equipe is null)
             {
                 return NotFound("Este id não existe, por favor digite um id válido.");

@@ -19,13 +19,13 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("Cargos")]
         public ActionResult<IEnumerable<Funcionario>> GetFuncionariosCargos()
         {
-            return _context.Funcionarios.Include(p => p.Cargos).ToList();
+            return _context.Funcionarios.Include(p => p.Cargos).Where(f => f.FuncionarioId <= 10).AsNoTracking().ToList();
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Funcionario>> Get()
         {
-            var funcionarios = _context.Funcionarios.ToList();
+            var funcionarios = _context.Funcionarios.AsNoTracking().ToList();
             if (funcionarios is null)
             {
                 return NotFound("Funcionario não encontrado.");

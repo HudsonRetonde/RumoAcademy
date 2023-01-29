@@ -20,13 +20,13 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("FuncionariosPontos")]
         public ActionResult<IEnumerable<Ponto>> GetPontosFuncionarios()
         {
-            return _context.Pontos.Include(p => p.Funcionarios).ToList();
+            return _context.Pontos.Include(p => p.Funcionarios).Where(pto => pto.PontoId <= 10).AsNoTracking().ToList();
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Ponto>> Get() 
         {
-            var pontos = _context.Pontos.ToList();
+            var pontos = _context.Pontos.AsNoTracking().ToList();
             if (pontos is null)
             {
                 return NotFound("Ponto não encontrado.");
@@ -37,7 +37,7 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("{id:int}", Name= "ObterPonto")]
         public ActionResult<Ponto> Get(int id) 
         {
-            var ponto = _context.Pontos.FirstOrDefault(p => p.PontoId== id);
+            var ponto = _context.Pontos.AsNoTracking().FirstOrDefault(p => p.PontoId== id);
             if (ponto is null) 
             {
                 return NotFound("Este id não existe, por favor digite um id válido.");

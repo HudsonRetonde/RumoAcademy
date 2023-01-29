@@ -20,13 +20,13 @@ namespace APIPontoColaborador.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Cargo>> Get()
         {
-            return _context.Cargos.ToList();
+            return _context.Cargos.AsNoTracking().ToList();
         }
 
         [HttpGet("{id:int}", Name = "ObterCargo")]
         public ActionResult<Cargo> Get(int id)
         {
-            var cargo = _context.Cargos.FirstOrDefault(p => p.CargoId == id);
+            var cargo = _context.Cargos.AsNoTracking().FirstOrDefault(p => p.CargoId == id);
             if (cargo is null)
             {
                 return NotFound("Este id não existe, por favor digite um id válido.");

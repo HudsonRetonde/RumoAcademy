@@ -19,12 +19,12 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("FuncionariosLiderancas")]
         public ActionResult<IEnumerable<Lideranca>> GetPontosFuncionarios()
         {
-            return _context.Liderancas.Include(p => p.Funcionarios).ToList();
+            return _context.Liderancas.Include(p => p.Funcionarios).Where(l => l.LiderancaId <= 10).AsNoTracking().ToList();
         }
         [HttpGet]
         public ActionResult<IEnumerable<Lideranca>> Get()
         {
-            var liderancas = _context.Liderancas.ToList();
+            var liderancas = _context.Liderancas.AsNoTracking().ToList();
             if (liderancas is null)
             {
                 return NotFound("Lideranca não encontrada.");
@@ -35,7 +35,7 @@ namespace APIPontoColaborador.Controllers
         [HttpGet("{id:int}", Name = "ObterLideranca")]
         public ActionResult<Lideranca> Get(int id)
         {
-            var lideranca = _context.Liderancas.FirstOrDefault(p => p.LiderancaId == id);
+            var lideranca = _context.Liderancas.AsNoTracking().FirstOrDefault(p => p.LiderancaId == id);
             if (lideranca is null)
             {
                 return NotFound("Este id não existe, por favor digite um id válido.");
