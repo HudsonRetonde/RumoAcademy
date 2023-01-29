@@ -17,6 +17,12 @@ namespace APIPontoColaborador.Controllers
             _context = context;
         }
 
+        [HttpGet("FuncionariosPontos")]
+        public ActionResult<IEnumerable<Ponto>> GetPontosFuncionarios()
+        {
+            return _context.Pontos.Include(p => p.Funcionarios).ToList();
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Ponto>> Get() 
         {

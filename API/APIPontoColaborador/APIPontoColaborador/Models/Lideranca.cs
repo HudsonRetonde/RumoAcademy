@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace APIPontoColaborador.Models
 {
@@ -11,7 +12,9 @@ namespace APIPontoColaborador.Models
         [Required]
         [StringLength(45)]
         public string? DescricaoEquipe { get; set; }
+        
         public int Funcionario_FuncionarioId { get; set; }
+        [JsonIgnore]
         public virtual Funcionario? Funcionarios { get; set; }
     }
 }

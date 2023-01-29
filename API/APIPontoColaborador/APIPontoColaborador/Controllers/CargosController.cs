@@ -16,16 +16,11 @@ namespace APIPontoColaborador.Controllers
         {
             _context = context;
         }
-
+                    
         [HttpGet]
         public ActionResult<IEnumerable<Cargo>> Get()
         {
-            var cargos = _context.Cargos.ToList();
-            if (cargos is null)
-            {
-                return NotFound("Cargo não encontrado.");
-            }
-            return cargos;
+            return _context.Cargos.ToList();
         }
 
         [HttpGet("{id:int}", Name = "ObterCargo")]
@@ -36,7 +31,7 @@ namespace APIPontoColaborador.Controllers
             {
                 return NotFound("Este id não existe, por favor digite um id válido.");
             }
-            return cargo;
+            return Ok(cargo);
         }
 
         [HttpPost]
