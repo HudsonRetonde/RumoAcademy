@@ -16,9 +16,11 @@ public class Funcionario
     [Required]
     [StringLength(14)]
     public string? Cpf { get; set; }
-    [Required]    
+    [Required]
+    [DataType(DataType.Date)]
     public DateTime NascimentoFuncionario { get; set; }
     [Required]
+    [DataType(DataType.Date)]
     public DateTime DataDeAdmissao { get; set; }
     [Phone]
     public string? CelularFuncionario { get; set; }

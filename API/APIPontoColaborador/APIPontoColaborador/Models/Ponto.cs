@@ -10,6 +10,7 @@ namespace APIPontoColaborador.Models
         [Key] 
         public int PontoId { get; set; }
         [Required]
+        [DataType(DataType.Date)]
         public DateTime DataHorarioPonto { get; set; }
         public string? Justificativa { get; set; }
         
