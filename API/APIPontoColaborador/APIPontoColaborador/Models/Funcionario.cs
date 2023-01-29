@@ -11,7 +11,7 @@ public class Funcionario
     [Key]
     public int FuncionarioId { get; set; }
     [Required]
-    [StringLength(45)]
+    [StringLength(45, ErrorMessage ="O nome dever ter no mínimo 05 caracter e no máximo 45.", MinimumLength =5)]
     public string? NomeDoFuncionario { get; set; }
     [Required]
     [StringLength(14)]
@@ -20,9 +20,10 @@ public class Funcionario
     public DateTime NascimentoFuncionario { get; set; }
     [Required]
     public DateTime DataDeAdmissao { get; set; }
+    [Phone]
     public string? CelularFuncionario { get; set; }
-    [Required]
-
+    [Required(ErrorMessage ="Prezado(a) informe o seu e-mail")]
+    [RegularExpression(".+\\@.+\\..+", ErrorMessage ="Por gentileza, informe um e-mail válido.")]
     public string? EmailFuncionario { get; set; }
     
     public int CargoId { get; set; }

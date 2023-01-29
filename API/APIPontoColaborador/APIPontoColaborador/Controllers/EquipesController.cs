@@ -62,7 +62,7 @@ namespace APIPontoColaborador.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "ObterEquipe")]
+        [HttpGet("{id:int:min(1)}", Name = "ObterEquipe")]
         public ActionResult<Equipe> Get(int id)
         {
             try
@@ -93,7 +93,7 @@ namespace APIPontoColaborador.Controllers
                 new { id = equipe.EquipeId }, equipe);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         public ActionResult Put(int id, Equipe equipe)
         {
             if (id != equipe.EquipeId)
@@ -107,7 +107,7 @@ namespace APIPontoColaborador.Controllers
             return Ok(equipe);
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int:min(1)}")]
         public ActionResult Delete(int id)
         {
             var equipe = _context.Equipes.FirstOrDefault(p => p.EquipeId == id);

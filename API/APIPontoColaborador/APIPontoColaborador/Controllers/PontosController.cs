@@ -49,7 +49,7 @@ namespace APIPontoColaborador.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name= "ObterPonto")]
+        [HttpGet("{id:int:min(1)}", Name= "ObterPonto")]
         public ActionResult<Ponto> Get(int id) 
         {
             try
@@ -80,7 +80,7 @@ namespace APIPontoColaborador.Controllers
                 new { id = ponto.PontoId }, ponto);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         public ActionResult Put(int id, Ponto ponto)
         {
             if (id != ponto.PontoId)
@@ -94,7 +94,7 @@ namespace APIPontoColaborador.Controllers
             return Ok(ponto);
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int:min(1)}")]
         public ActionResult Delete(int id)
         {
             var ponto = _context.Pontos.FirstOrDefault(p => p.PontoId== id);

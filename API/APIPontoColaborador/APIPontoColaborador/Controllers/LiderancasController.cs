@@ -49,7 +49,7 @@ namespace APIPontoColaborador.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "ObterLideranca")]
+        [HttpGet("{id:int:min(1)}", Name = "ObterLideranca")]
         public ActionResult<Lideranca> Get(int id)
         {
             try
@@ -80,7 +80,7 @@ namespace APIPontoColaborador.Controllers
                 new { id = lideranca.LiderancaId }, lideranca);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         public ActionResult Put(int id, Lideranca lideranca)
         {
             if (id != lideranca.LiderancaId)
@@ -94,7 +94,7 @@ namespace APIPontoColaborador.Controllers
             return Ok(lideranca);
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int:min(1)}")]
         public ActionResult Delete(int id)
         {
             var lideranca = _context.Liderancas.FirstOrDefault(p => p.LiderancaId == id);
