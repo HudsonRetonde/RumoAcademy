@@ -7,6 +7,7 @@ namespace Bot
     {
         static void Main(string[] args)
         {
+
             
             var client = new HttpClient();
             var result = client.GetAsync("https://www.imperialled.com.br/index/categoria/abajures/cristal/").Result;
@@ -30,7 +31,11 @@ namespace Bot
                 foreach (var produto in produtos)
                 {
                     var elementoA = produto.Descendants("a").First();
-                    var link = elementoA.Attributes["href"].Value;
+                    var linkProduto = elementoA.Attributes["href"].Value;
+                    var listagemPreco = produto.SelectNodes(".//*[text()[contains(.,'vitrine')]]");
+                    if (listagemPreco is null || listagemPreco.Count == 0)
+                        continue;
+                    var smallPreco = listagemPreco[0];
 
                 }
             }
