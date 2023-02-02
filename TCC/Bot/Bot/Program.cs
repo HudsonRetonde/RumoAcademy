@@ -8,38 +8,44 @@ namespace Bot
         static void Main(string[] args)
         {
 
-            
+            var urlBase = "https://www.madeinbrazil.com.br/";
             var client = new HttpClient();
-            var result = client.GetAsync("https://www.imperialled.com.br/index/categoria/abajures/cristal/").Result;
+            var result = client.GetAsync("https://www.madeinbrazil.com.br/cordas-e-acessorios/contrabaixo?pagina=1").Result;
 
             Utf8EncodingProvider.Register();
             var html = result.Content.ReadAsStringAsync().Result;
 
-            var totalDePagina = 1;
+            var totalDePagina = 2;
 
             var paginas = Enumerable.Range(1, totalDePagina);
 
             foreach ( var pagina in paginas ) 
             {
-                result = client.GetAsync("https://www.imperialled.com.br/index/categoria/abajures/cristal/").Result;
+                result = client.GetAsync("https://www.madeinbrazil.com.br/cordas-e-acessorios/contrabaixo?pagina=1").Result;
                 html = result.Content.ReadAsStringAsync().Result;
 
                 var doc = new HtmlDocument();
                 doc.LoadHtml(html);
-                var produtos = doc.DocumentNode.SelectNodes("//div[contains(@class, 'item-box box-produto')]");
+
+                var produtos = doc.DocumentNode.SelectNodes("//div[contains(@class, 'spotContent')]");
 
                 foreach (var produto in produtos)
                 {
+                    var elementoPreco = produto.SelectNodes(".//span[contains(@class, 'fbits-spot-boleto-valor')]").FirstOrDefault();
+                    if (elementoPreco is null)
+                       continue;
+
+                    var preco = elementoPreco.InnerText.Replace("R$ ", "").Replace(",", ".");
+                    Console.WriteLine(preco);
                     var elementoA = produto.Descendants("a").First();
                     var linkProduto = elementoA.Attributes["href"].Value;
-                    var listagemPreco = produto.SelectNodes(".//*[text()[contains(.,'vitrine')]]");
-                    if (listagemPreco is null || listagemPreco.Count == 0)
-                        continue;
-                    var smallPreco = listagemPreco[0];
-
+                    var linkCompleto = urlBase + linkProduto;
+                    var titulo = produto.SelectNodes()
+                    
                 }
-            }
 
+            }
+            Console.ReadKey();
             
         }
     }
