@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BotAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BotAPI.Context
 {

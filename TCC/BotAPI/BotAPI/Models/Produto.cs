@@ -9,8 +9,10 @@ namespace BotAPI.Models
         [Key]
         public int ProdutoId { get; set; }
         [Required]
-        [StringLength(10)]
-        public string? Valor { get; set; }
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(8,2)")]
+        [Range(1,100000, ErrorMessage = "O preço deve estar entre {1} e {2}")]
+        public decimal Valor { get; set; }
         [Required]
         [StringLength(200)]
         public string? Descricao { get; set;}

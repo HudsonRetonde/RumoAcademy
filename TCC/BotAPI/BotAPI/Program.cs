@@ -30,8 +30,8 @@ namespace BotAPI
             options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                            .AddEntityFrameworkStores<AppDbContext>()
-                            .AddDefaultTokenProviders();
+                           .AddEntityFrameworkStores<AppDbContext>()
+                           .AddDefaultTokenProviders();
 
             builder.Services.AddTransient<IMeuServico, MeuServico>();
 
