@@ -1,6 +1,12 @@
 ﻿using BotAPI.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace BotAPI.Controllers
 {
@@ -10,11 +16,15 @@ namespace BotAPI.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IConfiguration _configuration;
 
-        public AutorizarController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AutorizarController(UserManager<IdentityUser> userManager, 
+            SignInManager<IdentityUser> signInManager,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -38,11 +48,12 @@ namespace BotAPI.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
+
             if(!result.Succeeded) 
                 return BadRequest(result.Errors);
 
             await _signInManager.SignInAsync(user, false);
-            return Ok();
+            return Ok(GeraToken(model));
         }
 
         [HttpPost("login")]
@@ -56,12 +67,47 @@ namespace BotAPI.Controllers
 
             if (result.Succeeded)
             {
-                return Ok();
+                return Ok(GeraToken(userInfo));
             } else
             {
                 ModelState.AddModelError(string.Empty, "login Inválido....");
                 return BadRequest(ModelState);
             }
+        }
+
+        private UsuarioToken GeraToken(UsuarioDTO userInfo)
+        {
+            //define declarações do usuário
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
+                new Claim("meuPet", "pipoca"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            //gera uma chave com base em um algoritimo simetrico
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+            //gera a assinatura digital do token usando o algoritimo
+            var credenciais = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var expiracao = _configuration["TokenConfiguration:ExpireHours"];
+            var expiration = DateTime.UtcNow.AddHours(double.Parse(expiracao));
+
+            JwtSecurityToken toen = new JwtSecurityToken(
+                    issuer: _configuration["TokenConfiguration:Issuer"],
+                    audience: _configuration["TokenConfiguration:Audience"],
+                    claims: claims,
+                    expires: expiration,
+                    signingCredentials: credenciais
+                );
+            return new UsuarioToken()
+            {
+                Authenticated = true,
+                Token = new JwtSecurityTokenHandler().WriteToken(toen),
+                Expiration = expiration,
+                Message = "Token JWT OK"
+            };
         }
 
         

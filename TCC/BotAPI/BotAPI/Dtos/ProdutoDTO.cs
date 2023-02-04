@@ -7,7 +7,7 @@ namespace BotAPI.Dtos
         
         public int ProdutoId { get; set; }
         
-        public string? Valor { get; set; }
+        public decimal Valor { get; set; }
         
         public string? Descricao { get; set; }
         

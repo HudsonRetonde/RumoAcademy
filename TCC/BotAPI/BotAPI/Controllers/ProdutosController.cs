@@ -4,6 +4,7 @@ using BotAPI.Dtos;
 using BotAPI.Models;
 using BotAPI.Pagination;
 using BotAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace BotAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProdutosController : ControllerBase
