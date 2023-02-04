@@ -97,6 +97,17 @@ namespace BotAPI
             IMapper mapper = mappingConfig.CreateMapper();
             builder.Services.AddSingleton(mapper);
 
+            //Definindo politica cors via atributo
+
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("PermitirApiRequest",
+            //        builder =>
+            //        builder.WithOrigins("https://wwwapirequest.io/")
+            //        .WithMethods("GET"));
+            //});
+            builder.Services.AddCors();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -111,6 +122,13 @@ namespace BotAPI
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //politica CORS restritiva
+            //app.UseCors(opt => opt
+            //    .WithOrigins("https://wwwapirequest.io/")
+            //    .WithMethods("GET"));
+
+            app.UseCors(opt => opt.AllowAnyOrigin());
 
             app.MapControllers();
             app.Run();

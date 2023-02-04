@@ -5,6 +5,7 @@ using BotAPI.Models;
 using BotAPI.Pagination;
 using BotAPI.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace BotAPI.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
+    //[EnableCors("PermitirApiRequest")]
     public class ProdutosController : ControllerBase
     {
         private readonly IUnitOfWork _uof;
@@ -26,6 +28,7 @@ namespace BotAPI.Controllers
         }
 
         [HttpGet("menorpreco")]
+        //[EnableCors("PermitirApiRequest")]
         public async Task<ActionResult<IEnumerable<ProdutoDTO>>> GetProdutosPrecos()
         {
             var produtos = await _uof.ProdutoRepository.GetProdutoPorPreco();
@@ -63,6 +66,7 @@ namespace BotAPI.Controllers
         }
 
         [HttpGet("{id:int:min(1)}", Name= "ObterProduto")]
+        //[EnableCors("PermitirApiRequest")]
         public async Task<ActionResult<ProdutoDTO>> Get(int id) 
         {
             try
@@ -85,6 +89,7 @@ namespace BotAPI.Controllers
         }
 
         [HttpPost]
+        //[EnableCors("PermitirApiRequest")]
         public async Task<ActionResult> Post([FromBody]ProdutoDTO produtoDto)
         {
             if (produtoDto is null)
@@ -102,6 +107,7 @@ namespace BotAPI.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
+        //[EnableCors("PermitirApiRequest")]
         public async Task<ActionResult> Put(int id, [FromBody] ProdutoDTO produtoDto) 
         {
             if (id != produtoDto.ProdutoId)
@@ -117,6 +123,7 @@ namespace BotAPI.Controllers
         }
 
         [HttpDelete("{id:int:min(1)}")]
+        //[EnableCors("PermitirApiRequest")]
         public async Task<ActionResult<ProdutoDTO>> Delete(int id) 
         {
             var produto = await _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
