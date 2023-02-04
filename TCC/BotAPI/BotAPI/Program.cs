@@ -4,6 +4,7 @@ using BotAPI.Controllers;
 using BotAPI.Dtos.Mappings;
 using BotAPI.Repository;
 using BotAPI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotAPI
@@ -24,8 +25,13 @@ namespace BotAPI
             
 
             string mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                            .AddEntityFrameworkStores<AppDbContext>()
+                            .AddDefaultTokenProviders();
 
             builder.Services.AddTransient<IMeuServico, MeuServico>();
 
@@ -49,7 +55,11 @@ namespace BotAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapControllers();
             app.Run();
         }
