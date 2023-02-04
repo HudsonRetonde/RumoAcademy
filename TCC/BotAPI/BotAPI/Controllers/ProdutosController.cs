@@ -1,31 +1,59 @@
-﻿using BotAPI.Context;
+﻿using AutoMapper;
+using BotAPI.Context;
+using BotAPI.Dtos;
 using BotAPI.Models;
+using BotAPI.Pagination;
+using BotAPI.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace BotAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProdutosController : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public ProdutosController(AppDbContext context)
+        private readonly IUnitOfWork _uof;
+        private readonly IMapper _mapper;
+        public ProdutosController(IUnitOfWork context, IMapper mapper)
         {
-            _context = context;
+            _uof = context;
+            _mapper = mapper;
+        }
+
+        [HttpGet("menorpreco")]
+        public ActionResult<IEnumerable<ProdutoDTO>> GetProdutosPrecos()
+        {
+            var produtos = _uof.ProdutoRepository.GetProdutoPorPreco().ToList();
+            var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
+
+            return produtosDto;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public  ActionResult<IEnumerable<ProdutoDTO>> Get([FromQuery] ProdutosParameters produtosParameters)
         {
             try
             {
-                var produtos = _context.Produtos.AsNoTracking().ToList();
-                if (produtos is null)
-                    return NotFound("Produtos não encontrados...");
-                return produtos;
+                var produtos = _uof.ProdutoRepository.GetProdutos(produtosParameters);
+
+                var metadata = new
+                {
+                    produtos.TotalCount,
+                    produtos.PageSize,
+                    produtos.CurrentPage,
+                    produtos.TotalPages,
+                    produtos.HasNext,
+                    produtos.HasPrevious
+                };
+
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+                var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
+
+                return produtosDto;
             }
             catch (Exception)
             {
@@ -34,15 +62,19 @@ namespace BotAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name= "ObterProduto")]
-        public ActionResult<Produto> Get(int id) 
+        [HttpGet("{id:int:min(1)}", Name= "ObterProduto")]
+        public ActionResult<ProdutoDTO> Get(int id) 
         {
             try
             {
-                var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
+                var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
+
                 if (produto is null)
                     return NotFound("Id não encontrado, por gentileza, verifique se o número está correto...");
-                return produto;
+
+                var produtoDto = _mapper.Map<ProdutoDTO>(produto);
+
+                return produtoDto;
 
             }
             catch (Exception)
@@ -53,42 +85,51 @@ namespace BotAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Produto produto)
+        public ActionResult Post([FromBody]ProdutoDTO produtoDto)
         {
-            if (produto is null)
+            if (produtoDto is null)
                 return BadRequest("Houve algum erro, por favor verifique se todos os itens foram preenchidos da forma correta..."); 
-            _context.Produtos.Add(produto);
-            _context.SaveChanges();
+
+            var produto = _mapper.Map<Produto>(produtoDto);
+
+            _uof.ProdutoRepository.Add(produto);
+            _uof.Commit();
+
+            var produtoDTO = _mapper.Map<ProdutoDTO>(produto);
 
             return new CreatedAtRouteResult("ObterProduto",
-                new { id = produto.ProdutoId }, produto);
+                new { id = produto.ProdutoId }, produtoDTO);
         }
 
-        [HttpPut("{id:int}")]
-        public ActionResult Put(int id, Produto produto) 
+        [HttpPut("{id:int:min(1)}")]
+        public ActionResult Put(int id, [FromBody] ProdutoDTO produtoDto) 
         {
-            if (id != produto.ProdutoId)
+            if (id != produtoDto.ProdutoId)
                 return BadRequest($"Produto com o id {id} não encontrado. Verifique se está correto...");
 
-            _context.Entry(produto).State = EntityState.Modified;
-            _context.SaveChanges();
+            var produto = _mapper.Map<Produto>(produtoDto);
 
-            return Ok(produto);
+            _uof.ProdutoRepository.Update(produto);
+            _uof.Commit();
+
+            return Ok();
 
         }
 
-        [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id) 
+        [HttpDelete("{id:int:min(1)}")]
+        public ActionResult<ProdutoDTO> Delete(int id) 
         {
-            var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoId == id);
+            var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
 
             if (produto is null)
                 return NotFound($"Produto com o id {id} não encontrado. Verifique se está correto...");
 
-            _context.Produtos.Remove(produto);
-            _context.SaveChanges();
+            _uof.ProdutoRepository.Delete(produto);
+            _uof.Commit();
 
-            return Ok(produto);
+            var produtoDto = _mapper.Map<ProdutoDTO>(produto);
+
+            return produtoDto;
         }
 
     }

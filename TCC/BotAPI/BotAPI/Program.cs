@@ -1,4 +1,9 @@
+using AutoMapper;
 using BotAPI.Context;
+using BotAPI.Controllers;
+using BotAPI.Dtos.Mappings;
+using BotAPI.Repository;
+using BotAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BotAPI
@@ -16,9 +21,23 @@ namespace BotAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            
+
             string mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
+
+            builder.Services.AddTransient<IMeuServico, MeuServico>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            builder.Services.AddSingleton(mapper);
 
             var app = builder.Build();
 
