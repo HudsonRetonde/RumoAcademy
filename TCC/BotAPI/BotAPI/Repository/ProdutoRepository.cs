@@ -1,6 +1,7 @@
 ﻿using BotAPI.Context;
 using BotAPI.Models;
 using BotAPI.Pagination;
+using Microsoft.EntityFrameworkCore;
 
 namespace BotAPI.Repository
 {
@@ -10,21 +11,15 @@ namespace BotAPI.Repository
         {
         }
 
-        public PagedList<Produto> GetProdutos(ProdutosParameters produtosParameters) 
-        {
-            //return Get()
-            //    .OrderBy(on => on.Descricao)
-            //    .Skip((produtosParameters.PageNumer -1) * produtosParameters.PageSize)
-            //    .Take(produtosParameters.PageSize)
-            //    .ToList();
-
-            return PagedList<Produto>.ToPagedList(Get().OrderBy(on => on.ProdutoId),
+        public async Task<PagedList<Produto>> GetProdutos(ProdutosParameters produtosParameters) 
+        {            
+            return await PagedList<Produto>.ToPagedList(Get().OrderBy(on => on.ProdutoId),
                 produtosParameters.PageNumer, produtosParameters.PageSize);
         }
 
-        public IEnumerable<Produto> GetProdutoPorPreco()
+        public async Task<IEnumerable<Produto>> GetProdutoPorPreco()
         {
-            return Get().OrderBy(c => c.Valor).ToList();
+            return await Get().OrderBy(c => c.Valor).ToListAsync();
         }
     }
 }

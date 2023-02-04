@@ -4,6 +4,6 @@
     {
         IProdutoRepository ProdutoRepository { get; }
 
-        void Commit();
+        Task Commit();
     }
 }

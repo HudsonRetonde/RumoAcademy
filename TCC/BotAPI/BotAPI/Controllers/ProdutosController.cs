@@ -24,20 +24,20 @@ namespace BotAPI.Controllers
         }
 
         [HttpGet("menorpreco")]
-        public ActionResult<IEnumerable<ProdutoDTO>> GetProdutosPrecos()
+        public async Task<ActionResult<IEnumerable<ProdutoDTO>>> GetProdutosPrecos()
         {
-            var produtos = _uof.ProdutoRepository.GetProdutoPorPreco().ToList();
+            var produtos = await _uof.ProdutoRepository.GetProdutoPorPreco();
             var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
 
             return produtosDto;
         }
 
         [HttpGet]
-        public  ActionResult<IEnumerable<ProdutoDTO>> Get([FromQuery] ProdutosParameters produtosParameters)
+        public  async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get([FromQuery] ProdutosParameters produtosParameters)
         {
             try
             {
-                var produtos = _uof.ProdutoRepository.GetProdutos(produtosParameters);
+                var produtos = await _uof.ProdutoRepository.GetProdutos(produtosParameters);
 
                 var metadata = new
                 {
@@ -48,8 +48,6 @@ namespace BotAPI.Controllers
                     produtos.HasNext,
                     produtos.HasPrevious
                 };
-
-                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
                 var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
 
@@ -63,11 +61,11 @@ namespace BotAPI.Controllers
         }
 
         [HttpGet("{id:int:min(1)}", Name= "ObterProduto")]
-        public ActionResult<ProdutoDTO> Get(int id) 
+        public async Task<ActionResult<ProdutoDTO>> Get(int id) 
         {
             try
             {
-                var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
+                var produto = await _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
 
                 if (produto is null)
                     return NotFound("Id não encontrado, por gentileza, verifique se o número está correto...");
@@ -85,7 +83,7 @@ namespace BotAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody]ProdutoDTO produtoDto)
+        public async Task<ActionResult> Post([FromBody]ProdutoDTO produtoDto)
         {
             if (produtoDto is null)
                 return BadRequest("Houve algum erro, por favor verifique se todos os itens foram preenchidos da forma correta..."); 
@@ -93,7 +91,7 @@ namespace BotAPI.Controllers
             var produto = _mapper.Map<Produto>(produtoDto);
 
             _uof.ProdutoRepository.Add(produto);
-            _uof.Commit();
+            await _uof.Commit();
 
             var produtoDTO = _mapper.Map<ProdutoDTO>(produto);
 
@@ -102,7 +100,7 @@ namespace BotAPI.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public ActionResult Put(int id, [FromBody] ProdutoDTO produtoDto) 
+        public async Task<ActionResult> Put(int id, [FromBody] ProdutoDTO produtoDto) 
         {
             if (id != produtoDto.ProdutoId)
                 return BadRequest($"Produto com o id {id} não encontrado. Verifique se está correto...");
@@ -110,22 +108,22 @@ namespace BotAPI.Controllers
             var produto = _mapper.Map<Produto>(produtoDto);
 
             _uof.ProdutoRepository.Update(produto);
-            _uof.Commit();
+            await _uof.Commit();
 
             return Ok();
 
         }
 
         [HttpDelete("{id:int:min(1)}")]
-        public ActionResult<ProdutoDTO> Delete(int id) 
+        public async Task<ActionResult<ProdutoDTO>> Delete(int id) 
         {
-            var produto = _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
+            var produto = await _uof.ProdutoRepository.GetById(p => p.ProdutoId == id);
 
             if (produto is null)
                 return NotFound($"Produto com o id {id} não encontrado. Verifique se está correto...");
 
             _uof.ProdutoRepository.Delete(produto);
-            _uof.Commit();
+            await _uof.Commit();
 
             var produtoDto = _mapper.Map<ProdutoDTO>(produto);
 
