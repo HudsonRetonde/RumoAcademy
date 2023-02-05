@@ -4,10 +4,10 @@ namespace ProdutosMvc.Services
 {
     public interface IProdutoService
     {
-        Task<IEnumerable<ProdutoViewModel>> GetProdutos();
-        Task<ProdutoViewModel> GetProdutoPorId(int id);
-        Task<ProdutoViewModel> CriaProduto(ProdutoViewModel produtoVM);
-        Task<bool> AtualizaProduto(int id, ProdutoViewModel produtoVM);
-        Task<bool> DeletaProduto(int id);
+        Task<IEnumerable<ProdutoViewModel>> GetProdutos(string token);
+        Task<ProdutoViewModel> GetProdutoPorId(int id, string token);
+        Task<ProdutoViewModel> CriaProduto(ProdutoViewModel produtoVM, string token);
+        Task<bool> AtualizaProduto(int id, ProdutoViewModel produtoVM, string token);
+        Task<bool> DeletaProduto(int id, string token);
     }
 }

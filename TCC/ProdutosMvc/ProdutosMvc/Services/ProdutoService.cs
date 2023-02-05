@@ -1,5 +1,6 @@
 ﻿using ProdutosMvc.Models;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -7,22 +8,24 @@ namespace ProdutosMvc.Services;
 
 public class ProdutoService : IProdutoService
 {
-    private const string apiEndpoint = "/api/Produtos/";
+
+    private readonly IHttpClientFactory _clientFactory;
+    private const string apiEndpoint = "/api/Produtos";
 
     private readonly JsonSerializerOptions _options;
-    private readonly IHttpClientFactory _clientFactory;
 
     private ProdutoViewModel produtoVM;
     private IEnumerable<ProdutoViewModel> produtosVM;
 
     public ProdutoService(IHttpClientFactory clientFactory)
     {
-        _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true};
         _clientFactory = clientFactory;
+        _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true};
     }
-    public async Task<IEnumerable<ProdutoViewModel>> GetProdutos()
+    public async Task<IEnumerable<ProdutoViewModel>> GetProdutos(string token)
     {
         var client = _clientFactory.CreateClient("ProdutosApi");
+        PutTokenInHeaderAuthorization(token, client);
 
         using (var response = await client.GetAsync(apiEndpoint))
         {
@@ -42,11 +45,12 @@ public class ProdutoService : IProdutoService
         }
     }
 
-    public async Task<ProdutoViewModel> GetProdutoPorId(int id)
+    public async Task<ProdutoViewModel> GetProdutoPorId(int id, string token)
     {
         var client = _clientFactory.CreateClient("ProdutosApi");
+		PutTokenInHeaderAuthorization(token, client);
 
-        using (var response = await client.GetAsync(apiEndpoint + id))
+		using (var response = await client.GetAsync(apiEndpoint + id))
         {
             if (response.IsSuccessStatusCode)
             {
@@ -63,12 +67,13 @@ public class ProdutoService : IProdutoService
             return produtoVM;
         }
     }
-    public async Task<ProdutoViewModel> CriaProduto(ProdutoViewModel produtoVM)
+    public async Task<ProdutoViewModel> CriaProduto(ProdutoViewModel produtoVM, string token)
     {
         var client = _clientFactory.CreateClient("ProdutosApi");
+		PutTokenInHeaderAuthorization(token, client);
 
-        var categoria = JsonSerializer.Serialize(produtoVM);
-        StringContent content = new StringContent(categoria, Encoding.UTF8, "application/json");
+		var produto = JsonSerializer.Serialize(produtoVM);
+        StringContent content = new StringContent(produto, Encoding.UTF8, "application/json");
 
         using (var response = await client.PostAsync(apiEndpoint, content))
         {
@@ -87,11 +92,12 @@ public class ProdutoService : IProdutoService
         }
     }          
 
-    public async Task<bool> AtualizaProduto(int id, ProdutoViewModel produtoVM)
+    public async Task<bool> AtualizaProduto(int id, ProdutoViewModel produtoVM, string token)
     {
         var client = _clientFactory.CreateClient("ProdutosApi");
+		PutTokenInHeaderAuthorization(token, client);
 
-        using (var response = await client.PutAsJsonAsync(apiEndpoint + id, produtoVM))
+		using (var response = await client.PutAsJsonAsync(apiEndpoint + id, produtoVM))
         {
             if (response.IsSuccessStatusCode)
             {
@@ -105,11 +111,12 @@ public class ProdutoService : IProdutoService
     }
 
 
-    public async Task<bool> DeletaProduto(int id)
+    public async Task<bool> DeletaProduto(int id, string token)
     {
         var client = _clientFactory.CreateClient("ProdutosApi");
+		PutTokenInHeaderAuthorization(token, client);
 
-        using (var response = await client.DeleteAsync(apiEndpoint + id))
+		using (var response = await client.DeleteAsync(apiEndpoint + id))
         {
             if (response.IsSuccessStatusCode)
             {
@@ -122,5 +129,9 @@ public class ProdutoService : IProdutoService
         }
     }
 
+    private static void PutTokenInHeaderAuthorization(string token, HttpClient client)
+    {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    }
 
 }

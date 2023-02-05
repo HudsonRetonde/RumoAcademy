@@ -4,23 +4,35 @@ using ProdutosMvc.Services;
 
 namespace ProdutosMvc.Controllers
 {
-    public class ProdutosController : Controller
-    {
-        private readonly IProdutoService _produtoService;
+	public class ProdutosController : Controller
+	{
+		private readonly IProdutoService _produtoService;
+		private string token = string.Empty;
 
-        public ProdutosController(IProdutoService produtoService)
-        {
-            _produtoService = produtoService;
-        }
+		public ProdutosController(IProdutoService produtoService)
+		{
+			_produtoService = produtoService;
+		}		
 
-        public async Task<ActionResult<IEnumerable<ProdutoViewModel>>> Index()
-        {
-            var result = await _produtoService.GetProdutos();
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<ProdutoViewModel>>> Index()
+		{
+			//extrai o token do cookie
+			var result = await _produtoService.GetProdutos(ObtemTokenJwt());
 
-            if(result is null)
-                return View("Error");
+			if (result is null)
+				return View("Error");
 
-            return View(result);
-        }
-    }
+			return View(result);	
+		}
+
+		private string ObtemTokenJwt()
+		{
+			if (HttpContext.Request.Cookies.ContainsKey("X-Access-Token"))
+				token = HttpContext.Request.Cookies["X-Access-Token"].ToString();
+
+			return token;
+		}
+	}
+
 }
