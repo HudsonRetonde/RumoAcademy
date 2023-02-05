@@ -36,17 +36,31 @@ namespace Bot
                        continue;
 
                     var preco = elementoPreco.InnerText.Replace("R$ ", "").Replace(",", ".");
-                    Console.WriteLine(preco);
+                    Console.WriteLine("O valor do produto é R$ " + preco);
                     
 
                     var elementoA = produto.Descendants("a").First();
                     var linkProduto = elementoA.Attributes["href"].Value;
                     var linkCompleto = urlBase + linkProduto;
-                    Console.WriteLine(linkCompleto);
+                    Console.WriteLine("Pode ser encontrado no link " +linkCompleto);
 
                     var elementoDescricao = produto.Descendants("h3").FirstOrDefault();
                     var descricao = elementoDescricao.InnerText.Replace("\n","").Replace("\r","");
-					Console.WriteLine(descricao);
+					Console.WriteLine("Descrição " + descricao);
+
+                    var elementoQtdParcela = produto.SelectNodes(".//span[contains(@class, 'fbits-quantidadeParcelas')]").FirstOrDefault();
+                    var fElementoQtdParcela = elementoQtdParcela.InnerText;
+
+					var elementoXParcela = produto.SelectNodes(".//span[contains(@class, 'fbits-parcela-x')]").FirstOrDefault();
+                    var fElementoXParcela = elementoXParcela.InnerText;
+
+					var elementoDeParcela = produto.SelectNodes(".//span[contains(@class, 'fbits-parcela-de')]").FirstOrDefault();
+                    var fElementoDeParcela = elementoDeParcela.InnerText;
+
+					var elementoVlrParcela = produto.SelectNodes(".//span[contains(@class, 'fbits-parcela-')]").FirstOrDefault();
+                    var fElementoVlrParcela = elementoVlrParcela.InnerText;
+                    var parcelamento = fElementoQtdParcela + " " + fElementoXParcela + " " + fElementoDeParcela + " " + fElementoVlrParcela;
+					Console.WriteLine(parcelamento);
                     Console.WriteLine();
 
 
