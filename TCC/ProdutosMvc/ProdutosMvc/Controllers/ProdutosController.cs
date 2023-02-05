@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ProdutosMvc.Models;
 using ProdutosMvc.Services;
 
@@ -25,6 +26,7 @@ namespace ProdutosMvc.Controllers
 
 			return View(result);	
 		}
+		
 
 		private string ObtemTokenJwt()
 		{

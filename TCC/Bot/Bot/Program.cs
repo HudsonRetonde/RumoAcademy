@@ -15,7 +15,7 @@ namespace Bot
             Utf8EncodingProvider.Register();
             var html = result.Content.ReadAsStringAsync().Result;
 
-            var totalDePagina = 2;
+            var totalDePagina = 60;
 
             var paginas = Enumerable.Range(1, totalDePagina);
 
@@ -37,12 +37,20 @@ namespace Bot
 
                     var preco = elementoPreco.InnerText.Replace("R$ ", "").Replace(",", ".");
                     Console.WriteLine(preco);
+                    
+
                     var elementoA = produto.Descendants("a").First();
                     var linkProduto = elementoA.Attributes["href"].Value;
                     var linkCompleto = urlBase + linkProduto;
-                    var titulo = produto.SelectNodes()
-                    
-                }
+                    Console.WriteLine(linkCompleto);
+
+                    var elementoDescricao = produto.Descendants("h3").FirstOrDefault();
+                    var descricao = elementoDescricao.InnerText.Replace("\n","").Replace("\r","");
+					Console.WriteLine(descricao);
+                    Console.WriteLine();
+
+
+				}
 
             }
             Console.ReadKey();
