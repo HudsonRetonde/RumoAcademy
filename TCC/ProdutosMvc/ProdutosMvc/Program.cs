@@ -1,3 +1,5 @@
+using ProdutosMvc.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +9,8 @@ builder.Services.AddHttpClient("ProdutosApi", c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["ServiceUri:ProdutosApi"]);
 });
+
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
 
 var app = builder.Build();
 
