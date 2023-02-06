@@ -57,10 +57,11 @@ namespace Bot
 					var elementoDeParcela = produto.SelectNodes(".//span[contains(@class, 'fbits-parcela-de')]").FirstOrDefault();
                     var fElementoDeParcela = elementoDeParcela.InnerText;
 
-					var elementoVlrParcela = produto.SelectNodes(".//span[contains(@class, 'fbits-parcela-')]").FirstOrDefault();
+					var elementoVlrParcela = produto.SelectNodes(".//span[contains(@class, 'fbits-parcela')]").FirstOrDefault();
                     var fElementoVlrParcela = elementoVlrParcela.InnerText;
                     var parcelamento = fElementoQtdParcela + " " + fElementoXParcela + " " + fElementoDeParcela + " " + fElementoVlrParcela;
 					Console.WriteLine(parcelamento);
+
                     Console.WriteLine();
 
 
